@@ -22,7 +22,7 @@ jobs:
 
     - name: Upload file to GCS
       run: |
-        gsutil cp ${{ github.workspace }}/index.html gs://${{ secrets.GCS_BUCKET_NAME }}
+        gsutil cp ${{ github.workspace }}/index.htmlgs://${{ secrets.GCS_BUCKET_NAME }}
       env:
         GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
 
