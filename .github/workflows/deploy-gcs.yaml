@@ -19,7 +19,7 @@ jobs:
     - uses: actions/checkout@v2
 
     # Setup gcloud CLI
-    - uses: google-github-actions/setup-gcloud@v0
+    - uses: app-3-396620/setup-gcloud@v0
       with:
         service_account_email: ${{ secrets.GCP_SA_EMAIL }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
@@ -27,5 +27,5 @@ jobs:
 
     - name: Deploy via GCS
       run: |
-        gsutil -m rm -rf gs://github-action-gcs/* || echo "$?"
-        gsutil -m cp -r * gs://github-action-gcs/
+        gsutil -m rm -rf gs://www.explorationhub.net/* || echo "$?"
+        gsutil -m cp -r * gs://www.explorationhub.net/
