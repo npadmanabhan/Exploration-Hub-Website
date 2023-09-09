@@ -23,7 +23,7 @@ jobs:
       with:
         service_account_email: ${{ secrets.GCP_SA_EMAIL }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
-        project_id: github-actions-gcs
+        project_id: app-3-396620
 
     - name: Deploy via GCS
       run: |
