@@ -1,31 +1,32 @@
-name: GCS Deployment
+name: Upload to GCS
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the main branch
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "deploy"
-  deploy:
-    # The type of runner that the job will run on
+  upload:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    # Setup gcloud CLI
-    - uses: app-3-396620/setup-gcloud@v0
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
       with:
-        service_account_email: ${{ secrets.GCP_SA_EMAIL }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
-        project_id: app-3-396620
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        export_default_credentials: true
 
-    - name: Deploy via GCS
+    - name: Upload file to GCS
       run: |
-        gsutil -m rm -rf gs://www.explorationhub.net/* || echo "$?"
-        gsutil -m cp -r * gs://www.explorationhub.net/
+        gsutil cp ${{ github.workspace }}/index.html gs://${{ secrets.GCS_BUCKET_NAME }}
+      env:
+        GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+
+    - name: Clean up
+      run: |
+        rm -rf ${{ github.workspace }}/index.html
+
