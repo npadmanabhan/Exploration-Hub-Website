@@ -1,18 +1,27 @@
+#Name of the GitHub Actions workflow
 name: Deploy Website to GCS
 
+#Triggers workflow on each push to the main branch
 on:
   push:
     branches:
       - main
 
+#A workflow is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+
+   #The type of runner that the job will run on. Basically, GitHub-hosted runners offer a quicker, simpler way to run your workflow.
   upload:
     runs-on: ubuntu-latest
 
+    #Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+
+    #Checks out repo into a workspace setup by GitHub Actions
     - name: Checkout code
       uses: actions/checkout@v2
 
+    #Sets up Google Cloud SDK in that workspace i.e. configures the runner with the tools and authentication needed to interact with Google Cloud Services
     - name: Set up Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
@@ -20,12 +29,14 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         export_default_credentials: true
 
+    #Runs gsutil command (provided by Google Cloud SDK) to upload file(s) from source to the destination bucket
     - name: Upload file to GCS
       run: |
         gsutil cp ${{ github.workspace }}/index.html gs://${{ secrets.GCS_BUCKET_NAME }}
       env:
         GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
 
+    #Cleans up workspace
     - name: Clean up
       run: |
         rm -rf ${{ github.workspace }}/index.html
